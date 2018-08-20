@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Atividade;
 use Illuminate\Http\Request;
+use \Illuminate\Support\Facades\Validator;
+
 
 class AtividadeController extends Controller
 {
@@ -25,7 +27,7 @@ class AtividadeController extends Controller
      */
     public function create()
     {
-        //
+        return view('atividade.create');
     }
 
     /**
@@ -45,10 +47,12 @@ class AtividadeController extends Controller
      * @param  \App\Atividade  $atividade
      * @return \Illuminate\Http\Response
      */
-    public function show(Atividade $atividade)
-    {
-        //
-    }
+    public function show($id)
+{
+    $atividade = Atividade::find($id);
+    return view('atuividade.show',['atividade' => $atividade]);
+}
+
 
     /**
      * Show the form for editing the specified resource.
