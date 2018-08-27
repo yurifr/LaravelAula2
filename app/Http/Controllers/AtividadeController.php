@@ -38,7 +38,34 @@ class AtividadeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $messages = array(
+            'title.required' => 'É obrigatório um título para a atividade',
+            'description.required' => 'É obrigatória uma descrição para a atividade',
+            'scheduledto.required' => 'É obrigatório o cadastro da data/hora da atividade',
+            );
+
+        $regras = array(
+            'title' => 'required|string|max:255',
+            'description' => 'required',
+            'scheduledto' => 'required|string',
+            );
+
+        $validador = Validator::make($request->all(), $regras, $messages);
+
+        if ($validador->fails())    {
+            return redirect('atividades/create')
+            ->withErrors($validador)
+            ->withInput($request->all);
+        }
+
+        $obj_Atividade = new Atividade();
+        $obj_Atividade->title =     $request['title'];
+        $obj_Atividade->description = $request['description'];
+        $obj_Atividade->scheduledto = $request['scheduledto'];
+        $obj_Atividade->save();
+
+        return redirect('/atividades')->with('success', 'Atividade criada com sucesso!!');
+        
     }
 
     /**
@@ -50,7 +77,7 @@ class AtividadeController extends Controller
     public function show($id)
 {
     $atividade = Atividade::find($id);
-    return view('atuividade.show',['atividade' => $atividade]);
+    return view('atividade.show',['atividade' => $atividade]);
 }
 
 
