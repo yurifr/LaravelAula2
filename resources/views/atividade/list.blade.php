@@ -24,3 +24,4 @@
 
 <br>
 <p><a href="/atividades/create">Criar novo registro</a></p>
+
