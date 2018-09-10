@@ -91,9 +91,10 @@ class MensagemController extends Controller
      * @param  \App\Mensagem  $mensagem
      * @return \Illuminate\Http\Response
      */
-    public function edit(Mensagem $mensagem)
+    public function edit($id)
     {
-        //
+        $obj_mensagem = Mensagem::find($id);
+        return view('mensagem.edit',['mensagem' => $obj_mensagem]);
     }
 
     /**
@@ -103,10 +104,56 @@ class MensagemController extends Controller
      * @param  \App\Mensagem  $mensagem
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Mensagem $mensagem)
+    public function update(Request $request, $id)
     {
-        //
+        //faço as validações dos campos
+
+        //vetor com as mensagens de erro
+        $messages = array(
+            'titulo.required' => 'É obrigatório um título para a mensagem',
+            'texto.required' => 'É obrigatória um texto para a mensagem',
+            'autor.required' => 'É obrigatório o cadastro do autor da mensagem',
+        );
+
+        //vetor com as especificações de validações
+        $regras = array(
+            'titulo' => 'required|string|max:255',
+            'texto' => 'required',
+            'autor' => 'required|string',
+        );
+
+        //cria o objeto com as regras de validação
+        $validador = Validator::make($request->all(), $regras, $messages);
+
+        //executa as validações
+        if ($validador->fails()) {
+            return redirect('mensagens/$id/edit')
+            ->withErrors($validador)
+            ->withInput($request->all);
+        }
+
+        //se passou pelas validações, processa e salva no banco...
+        $obj_mensagem = Mensagem::findOrFail($id);
+        $obj_mensagem->titulo = $request['titulo'];
+        $obj_mensagem->texto = $request['texto'];
+        $obj_mensagem->autor = $request['autor'];
+        $obj_mensagem->save();
+
+        return redirect('/mensagens')->with('success', 'Mensagem alterada com sucesso!!');
     }
+
+    /**
+     * Show the form for deleting the specified resource.
+     *
+     * @param  \App\Mensagem  $mensagem
+     * @return \Illuminate\Http\Response
+     */
+    public function delete($id)
+    {
+        $obj_mensagem = Mensagem::find($id);
+        return view('mensagem.delete',['mensagem' => $obj_mensagem]);
+    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -114,8 +161,10 @@ class MensagemController extends Controller
      * @param  \App\Mensagem  $mensagem
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Mensagem $mensagem)
+    public function destroy($id)
     {
-        //
+        $obj_mensagem = Mensagem::findOrFail($id);
+        $obj_mensagem->delete($id);
+        return redirect('/mensagens')->with('sucess','Mensagem excluída com Sucesso!!');
     }
 }
