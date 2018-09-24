@@ -86,12 +86,12 @@ class AtividadeController extends Controller
      * @param  \App\Atividade  $atividade
      * @return \Illuminate\Http\Response
      */
+    
     public function show($id)
     {
-        $atividade = Atividade::find($id);
+        $atividade = Atividade::find($id)->with('mensagens')->get()->first();
         return view('atividade.show',['atividade' => $atividade]);
     }
-
     /**
      * Show the form for editing the specified resource.
      *
