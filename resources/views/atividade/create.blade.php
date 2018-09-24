@@ -1,4 +1,4 @@
-<h1>Formulário de Cadastro de Atividade</h1>
+<center><h1>Formulário de Cadastro de Atividade</h1></center>
 <hr>
 
   <!-- EXIBE MENSAGENS DE ERROS -->

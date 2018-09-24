@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Mensagem;
 use Illuminate\Http\Request;
 use \Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+
 
 class MensagemController extends Controller
 {
@@ -15,7 +17,12 @@ class MensagemController extends Controller
      */
     public function index()
     {
+        if(Auth::check() ){
+            $listaMensagens = Mensagem::where('user_id', Auth::id() )->get();
+        }
+        else{
         $listaMensagens = Mensagem::all();
+        }
         return view('mensagem.list',['mensagens' => $listaMensagens]);
     }
 
@@ -68,6 +75,7 @@ class MensagemController extends Controller
         $obj_Mensagem->titulo =       $request['titulo'];
         $obj_Mensagem->texto = $request['texto'];
         $obj_Mensagem->autor = $request['autor'];
+        $obj_Mensagem->user_id = Auth::id();
         $obj_Mensagem->save();
 
         return redirect('/mensagens')->with('success', 'Mensagem criada com sucesso!!');
@@ -93,8 +101,8 @@ class MensagemController extends Controller
      */
     public function edit($id)
     {
-        $obj_mensagem = Mensagem::find($id);
-        return view('mensagem.edit',['mensagem' => $obj_mensagem]);
+        $obj_Mensagem = Mensagem::find($id);
+        return view('mensagem.edit',['mensagem' => $obj_Mensagem]);
     }
 
     /**
@@ -133,11 +141,13 @@ class MensagemController extends Controller
         }
 
         //se passou pelas validações, processa e salva no banco...
-        $obj_mensagem = Mensagem::findOrFail($id);
-        $obj_mensagem->titulo = $request['titulo'];
-        $obj_mensagem->texto = $request['texto'];
-        $obj_mensagem->autor = $request['autor'];
-        $obj_mensagem->save();
+        $obj_Mensagem = Mensagem::findOrFail($id);
+        $obj_Mensagem->titulo = $request['titulo'];
+        $obj_Mensagem->texto = $request['texto'];
+        $obj_Mensagem->autor = $request['autor'];
+        $obj_Mensagem->user_id = Auth::id();
+
+        $obj_Mensagem->save();
 
         return redirect('/mensagens')->with('success', 'Mensagem alterada com sucesso!!');
     }
@@ -150,8 +160,8 @@ class MensagemController extends Controller
      */
     public function delete($id)
     {
-        $obj_mensagem = Mensagem::find($id);
-        return view('mensagem.delete',['mensagem' => $obj_mensagem]);
+        $obj_Mensagem = Mensagem::find($id);
+        return view('mensagem.delete',['mensagem' => $obj_Mensagem]);
     }
 
 
@@ -163,8 +173,8 @@ class MensagemController extends Controller
      */
     public function destroy($id)
     {
-        $obj_mensagem = Mensagem::findOrFail($id);
-        $obj_mensagem->delete($id);
+        $obj_Mensagem = Mensagem::findOrFail($id);
+        $obj_Mensagem->delete($id);
         return redirect('/mensagens')->with('sucess','Mensagem excluída com Sucesso!!');
     }
 }

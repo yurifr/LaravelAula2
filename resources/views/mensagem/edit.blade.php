@@ -1,4 +1,4 @@
-<h1>Formulário de Edição da mensagem código {{$mensagem->id}}</h1>
+<h1>Formulário de Edição da mensagem {{$mensagem->id}}</h1>
 <hr>
 
   <!-- EXIBE MENSAGENS DE ERROS -->
@@ -17,9 +17,9 @@
 <form action="/mensagens/{{$mensagem->id}}" method="POST">
 	{{ csrf_field() }}
 	{{ method_field('PUT') }}
-	Título: 		<input type="text" name="titulo" value="{{$mensagem->titulo}}"> 	     <br>
-	Texto:		<input type="text" name="texto" value="{{$mensagem->texto}}">   <br>
-	Autor:  <input type="text" name="autor" value="{{$mensagem->autor}}">   <br>
+	Título: 		<input type="text" name="titulo" value="{{$mensagem->titulo}}"><br><br>
+	Texto:		<input type="text" name="texto" value="{{$mensagem->texto}}"><br><br>
+	Autor:  <input type="text" name="autor" value="{{$mensagem->autor}}"><br><br>
 	<input type="submit" value="Salvar">
 </form>
 
